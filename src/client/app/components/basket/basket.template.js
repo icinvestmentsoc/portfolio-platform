@@ -10,12 +10,12 @@ export class BasketTemplate {
 
         /* eslint-disable indent */
         render`
-            <h2>Basket</h2>
+            <h2>Build a Portfolio</h2>
 
             <div class="pa2 w5">
                 <input id="assetsSearch" oninput="${events}"
                     class="pa2 w5"
-                    placeholder="What assets to be added?">
+                    placeholder="Type asset to add...">
             </div>
             <table class="${tableClasses}">
                 <thead>

@@ -19,7 +19,23 @@ export class AssetsController {
     }
 
     update() {
+        this.template.update(this.render, this.state, this.events);
+        AssetsService.saveAssets();
+    }
+
+    onAssetClick(e, item) {
+        const isRemoved = AssetsService.removeAsset(item);
+
+        if (isRemoved) {
+            BasketComponent.update();
+            StatsComponent.update();
+            this.update();
+        }
+    }
+
+    onAddPortfolioClick(e) {
         this.resetWeights();
+        console.log("test time");
 
         if (this.state.assets.length >= 3) {
             AssetsService.calcOptimalPortfolio().then(res => {
@@ -35,19 +51,6 @@ export class AssetsController {
                 AssetsService.saveAssets();
                 ToastsComponent.update({ message: "Optimization YOY done" });
             }).catch(err => ToastsComponent.update({ message: err.message || err }));
-        }
-
-        this.template.update(this.render, this.state, this.events);
-        AssetsService.saveAssets();
-    }
-
-    onAssetClick(e, item) {
-        const isRemoved = AssetsService.removeAsset(item);
-
-        if (isRemoved) {
-            BasketComponent.update();
-            StatsComponent.update();
-            this.update();
         }
     }
 

@@ -9,8 +9,8 @@ export class HeaderTemplate {
             <nav class="flex flex-row bt bb mh5 shadow-2">
 
                 <div class="flex flex-wrap flex-row justify-around items-center min-w-70 b logo">
-                    <a href="https://github.com/albertosantini/node-conpa">ConPA 5</a>
-                    <span>Asset Allocation App</span>
+                    <a href="http://investmentsoc.com/">Home</a>
+                    <span>Imperial Investment Society: Portfolio Dashboard</span>
                 </div>
 
                 <div class="flex flex-wrap flex-row justify-end items-center min-w-30 f7">

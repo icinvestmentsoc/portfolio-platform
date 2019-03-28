@@ -45,6 +45,7 @@ export class AssetsTemplate {
                     </tr>`;
                 })}</tbody>
             </table>
+            <button id="addPortfolio" onclick="${e => events(e)}">Add Portfolio</button>
         `;
         /* eslint-enable indent */
     }
