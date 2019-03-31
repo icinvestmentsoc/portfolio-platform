@@ -1,0 +1,10 @@
+parserOptions:
+    sourceType: "module"
+
+env:
+    browser: true
+
+globals:
+    hyperHTML: false
+    workway: false
+    YAHOO: true

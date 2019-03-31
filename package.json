@@ -1,0 +1,52 @@
+{
+    "name": "conpa",
+    "description": "Asset allocation application",
+    "version": "5.3.12",
+    "main": "src/server/app",
+    "repository": "http://github.com/albertosantini/node-conpa",
+    "keywords": [
+        "finance",
+        "asset allocation",
+        "optimization"
+    ],
+    "author": "Alberto Santini",
+    "license": "MIT",
+    "engines": {
+        "node": ">=8.x"
+    },
+    "scripts": {
+        "start": "npm-run-all --parallel backend db",
+        "now-start": "npm run backend",
+        "db": "npm-run-all --parallel pouchdb create-empty-db import",
+        "backend": "node src/server/app.js",
+        "pouchdb": "cd ./db && pouchdb-server --in-memory",
+        "test": "npm run lint",
+        "lint": "eslint 'src/**/*.js'",
+        "dump": "cd ./db && couchbackup --url http://localhost:5984 --db conpa -o dump.txt",
+        "create-empty-db": "sleep 10 && curl --noproxy localhost -X PUT http://localhost:5984/conpa",
+        "import": "cd ./db && sleep 15 && cat dump.txt | couchrestore --url http://localhost:5984 --db conpa",
+        "deploy": "now -V 1 deploy --public && now alias"
+    },
+    "now": {
+        "alias": "conpa",
+        "env": {
+            "NODE_ENV": "production",
+            "CONPA_LIVE_URL": "@conpa_live_url",
+            "CONPA_TEST_URL": "@conpa_test_url"
+        }
+    },
+    "dependencies": {
+        "express": "^4.16.4",
+        "finance": "^4.4.3",
+        "hyperhtml": "^2.25.4",
+        "limiter": "^1.1.4",
+        "tachyons": "^4.11.1",
+        "workway": "^0.5.3"
+    },
+    "devDependencies": {
+        "@cloudant/couchbackup": "^2.3.1",
+        "eslint": "^5.15.0",
+        "npm-run-all": "^4.1.5",
+        "pouchdb-server": "^4.1.0"
+    }
+}
