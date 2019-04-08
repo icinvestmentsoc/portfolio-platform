@@ -11,6 +11,7 @@ module.exports = mongoose.model("Transaction", mongoose.Schema({
     shares: Number, // amount of units sold/bought
     price: Number, // price per unit
     buying: Boolean,
+    active: Boolean,
     comments: [{
         uid: String,
         remark: String
