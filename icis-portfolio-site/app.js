@@ -7,6 +7,8 @@ const mongoose = require('mongoose'); // client for mongoDB
 const session = require('express-session'); // middleware that allows us to store user session data for if they wish to be logged in when they come back later
 const bodyParser = require('body-parser'); // will be used for POST handling
 
+const transHandler = require("./helpers/transactionHandler");
+
 var app = express();
 var server = http.Server(app);
 var hbs = handlebars.create();
@@ -19,8 +21,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({secret: 'max', saveUninitialized: false, resave: false}));
 
+const Instrument = require("./models/instrument");
+
 /* Establish connection with mongoDB server for our mongoose client */
-mongoose.connect("mongodb://admin:pass@cluster0-shard-00-00-jai9z.mongodb.net:27017,cluster0-shard-00-01-jai9z.mongodb.net:27017,cluster0-shard-00-02-jai9z.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true", {useNewUrlParser: true});
+mongoose.connect("mongodb://admin:pass@cluster0-shard-00-00-jai9z.mongodb.net:27017,cluster0-shard-00-01-jai9z.mongodb.net:27017,cluster0-shard-00-02-jai9z.mongodb.net:27017/icisportfolio?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true", {useNewUrlParser: true});
 /**
  *  mongodb.com Credentials for db testing (will migrate later):
  *  Email: h.illiamtung@gmail.com
@@ -31,6 +35,17 @@ mongoose.connect("mongodb://admin:pass@cluster0-shard-00-00-jai9z.mongodb.net:27
 
 app.get("/", (req, res) => {
     res.render("index.hbs");
+});
+
+app.get("/admin", (req, res) => {
+    res.render("admin.hbs");
+})
+
+app.post("/excelInput", (req, res) => {
+    var transactions = JSON.parse(req.body.data);
+    console.log(transactions);
+    transHandler.handleIncomingTransactions(transactions);
+    res.end("Working");
 });
 
 

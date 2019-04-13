@@ -1,9 +1,8 @@
 /**
  * @name createLineChart
  * @description used for creating a stock line chart for showing off society portfolio
- * @param {*} jsonURL | GET URL for where we can find the data
- * @param {*} chartID | element id for where the chart will be placed within
- * @returns null
+ * @param {String} jsonURL | GET URL for where we can find the data
+ * @param {String} chartID | element id for where the chart will be placed within
  */
 
 function createLineChart(jsonURL, chartID) {
