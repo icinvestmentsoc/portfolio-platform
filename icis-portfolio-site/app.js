@@ -60,7 +60,7 @@ app.get("/portfolio", (req, res) => {
     });
 });
 
-schedule.scheduleJob("job", "0 0 * * *", "Europe/London", () => {
+schedule.scheduleJob("Price Tracking", "0 0 * * *", "Europe/London", () => {
     instrumHandler.ping();
 });
 

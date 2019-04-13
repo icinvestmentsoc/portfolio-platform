@@ -6,8 +6,14 @@ module.exports = mongoose.model("Transaction", mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Instrument"
     },
-    buyTime: Number,
-    sellTime: Number,
+    buyTime: {
+        type: Number,
+        default: undefined
+    },
+    sellTime: {
+        type: Number,
+        default: undefined
+    },
     shares: Number, // amount of units sold/bought
     price: Number, // price per unit,
     buying: Boolean,

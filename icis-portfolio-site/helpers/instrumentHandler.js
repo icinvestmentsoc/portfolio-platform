@@ -42,7 +42,7 @@ function update_price(symbol, name, newPrice) {
 
         instrumObj.currentPrice = newPrice;
         instrumObj.history.push({
-            time: roundDate(Date.now()),
+            time: round_date(Date.now()),
             price: newPrice
         });
 
@@ -50,7 +50,7 @@ function update_price(symbol, name, newPrice) {
     });
 }
 
-function roundDate(timeStamp){
+function round_date(timeStamp){
     timeStamp -= timeStamp % (24 * 60 * 60 * 1000);
     timeStamp += new Date().getTimezoneOffset() * 60 * 1000;
     return timeStamp;

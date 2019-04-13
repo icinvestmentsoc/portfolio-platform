@@ -28,15 +28,16 @@ function process_transaction(transObj) {
             (err, trades) => {
                 if (trades.length == 1) {
                     var trade = trades[0];
-                    var buyTime = (trade.buyTime) ? trade.buyTime : transObj.date;
-                    var sellTime = (trade.sellTime) ? trade.sellTime : transObj.date;
-
+                    var buyTime = (trade.buyTime) ? trade.buyTime : unix(transObj.date);
+                    var sellTime = (trade.sellTime) ? trade.sellTime : unix(transObj.date);
                     Transaction.findByIdAndUpdate(trades[0]._id, {
                         active: false,
                         closePrice: transObj.price,
-                        buyTime: unix(buyTime),
-                        sellTime: unix(sellTime)
-                    }, () => {});
+                        buyTime: buyTime,
+                        sellTime: sellTime,
+                    }).exec(() => {
+                        console.log("Updated trade");
+                    });
                 } else {
                     var addingTransObj = transObj;
                     addingTransObj.instrument = instrum._id;
@@ -165,5 +166,6 @@ function sort_by_date(transArray) {
 }
 
 function unix(excelDate) {
-    return new Date((excelDate - (25567 + 1)) * 86400 * 1000);
+    if (excelDate == null) return undefined;
+    return new Date((excelDate - (25567 + 1)) * 86400 * 1000).getTime();
 }
