@@ -6,8 +6,10 @@ const path = require('path');
 const mongoose = require('mongoose'); // client for mongoDB
 const session = require('express-session'); // middleware that allows us to store user session data for if they wish to be logged in when they come back later
 const bodyParser = require('body-parser'); // will be used for POST handling
+const schedule = require("node-schedule-tz");
 
 const transHandler = require("./helpers/transactionHandler");
+const instrumHandler = require("./helpers/instrumentHandler");
 
 var app = express();
 var server = http.Server(app);
@@ -56,9 +58,13 @@ app.get("/portfolio", (req, res) => {
     transHandler.getActiveTransactions((err, data) => {
         res.json(data);
     });
-})
+});
 
-server.listen(3000, function(){
+schedule.scheduleJob("job", "0 0 * * *", "Europe/London", () => {
+    instrumHandler.ping();
+});
+
+server.listen(3000, function() {
     console.log('listening on localhost:' + 3000);
 });
 

@@ -34,8 +34,8 @@ function process_transaction(transObj) {
                     Transaction.findByIdAndUpdate(trades[0]._id, {
                         active: false,
                         closePrice: transObj.price,
-                        buyTime: buyTime,
-                        sellTime: sellTime
+                        buyTime: unix(buyTime),
+                        sellTime: unix(sellTime)
                     }, () => {});
                 } else {
                     var addingTransObj = transObj;
@@ -100,8 +100,8 @@ function add_transaction(transObj) {
         price: transObj.price,
         buying: buyState,
         active: true,
-        buyTime: buyTime,
-        sellTime: sellTime,
+        buyTime: unix(buyTime),
+        sellTime: unix(sellTime),
         comments: []
     })
 
@@ -162,4 +162,8 @@ function sort_by_date(transArray) {
         return aTime - bTime;
     });
     return copy;
+}
+
+function unix(excelDate) {
+    return new Date((excelDate - (25567 + 1)) * 86400 * 1000);
 }
