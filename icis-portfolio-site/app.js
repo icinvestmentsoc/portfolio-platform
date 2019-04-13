@@ -21,8 +21,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({secret: 'max', saveUninitialized: false, resave: false}));
 
-const Instrument = require("./models/instrument");
-
 /* Establish connection with mongoDB server for our mongoose client */
 mongoose.connect("mongodb://admin:pass@cluster0-shard-00-00-jai9z.mongodb.net:27017,cluster0-shard-00-01-jai9z.mongodb.net:27017,cluster0-shard-00-02-jai9z.mongodb.net:27017/icisportfolio?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true", {useNewUrlParser: true});
 /**
@@ -48,6 +46,17 @@ app.post("/excelInput", (req, res) => {
     res.end("Working");
 });
 
+app.get("/transactions", (req, res) => {
+    transHandler.getTransactions((err, data) => {
+        res.json(data);
+    });
+});
+
+app.get("/portfolio", (req, res) => {
+    transHandler.getActiveTransactions((err, data) => {
+        res.json(data);
+    });
+})
 
 server.listen(3000, function(){
     console.log('listening on localhost:' + 3000);

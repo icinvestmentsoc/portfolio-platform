@@ -9,9 +9,10 @@ module.exports = mongoose.model("Transaction", mongoose.Schema({
     buyTime: Number,
     sellTime: Number,
     shares: Number, // amount of units sold/bought
-    price: Number, // price per unit
+    price: Number, // price per unit,
     buying: Boolean,
     active: Boolean,
+    closePrice: Number,
     comments: [{
         uid: String,
         remark: String

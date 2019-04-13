@@ -1,5 +1,7 @@
 module.exports = {
-    handleIncomingTransactions: handle_incoming_transactions
+    handleIncomingTransactions: handle_incoming_transactions,
+    getTransactions: get_transactions,
+    getActiveTransactions: get_active_transactions
 }
 
 const Transaction = require("../models/transaction");
@@ -25,11 +27,20 @@ function process_transaction(transObj) {
         find_opposing_trades(instrum._id, transObj.units, transObj.boughts, 
             (err, trades) => {
                 if (trades.length == 1) {
-                    //TODO: add an accompanying new trade and close both
-                    Transaction.findByIdAndUpdate(trades[0]._id, {active: false});
+                    var trade = trades[0];
+                    var buyTime = (trade.buyTime) ? trade.buyTime : transObj.date;
+                    var sellTime = (trade.sellTime) ? trade.sellTime : transObj.date;
+
+                    Transaction.findByIdAndUpdate(trades[0]._id, {
+                        active: false,
+                        closePrice: transObj.price,
+                        buyTime: buyTime,
+                        sellTime: sellTime
+                    }, () => {});
                 } else {
-                    
-                    add_transaction(transObj);
+                    var addingTransObj = transObj;
+                    addingTransObj.instrument = instrum._id;
+                    add_transaction(addingTransObj);
                 }
             }
         )
@@ -66,6 +77,8 @@ function find_opposing_trades(instrumentID, units, bought, callback) {
     .sort([['date', 'asc']])
     .limit(1)
     .exec((err, res) => {
+        console.log("Received");
+        console.log(res);
         callback(err, res);
     });
 }
@@ -76,14 +89,20 @@ function find_opposing_trades(instrumentID, units, bought, callback) {
  * @param {Array[Transaction]} transObj | Transaction Object
  */
 function add_transaction(transObj) {
+    var buyState = buying(transObj.bought);
+    var buyTime = buyState ? transObj.date : undefined;
+    var sellTime = buyState ? undefined : transObj.date;
+
     const transactionObj = new Transaction({
-        // TODO: ADD REST OF DATA
         _id: new mongoose.Types.ObjectId(),
+        instrument: transObj.instrument,
         shares: transObj.units,
         price: transObj.price,
-        buying: buying(transObj.bought),
-        active: true
-        
+        buying: buyState,
+        active: true,
+        buyTime: buyTime,
+        sellTime: sellTime,
+        comments: []
     })
 
     transactionObj.save();
@@ -93,8 +112,54 @@ function add_transaction(transObj) {
  * @name buying
  * @description Helper for turning boughtState into boolean
  * @param {Number} boughtState | 1 or -1 status
- * @returns {Boolean} If the transaction is a buying the instrument
+ * @returns {Boolean} Returns true if transaction is buying the instrument
  */
 function buying(boughtState) {
     return (boughtState == 1);
+}
+
+/**
+ * @name get_transactions
+ * @description Gives a sorted array of all transactions
+ * @param {Function(err, res)} callback | Function accepting (err, Array[Transaction])
+ */
+function get_transactions(callback) {
+    Transaction.find({})
+    .populate({
+        path: "instrument"
+    })
+    .exec((err, res) => {
+        callback(err, sort_by_date(res));
+    });
+}
+
+/**
+ * @name get_active_transactions
+ * @description Gives a sorted array of all active transactions
+ * @param {Function(err, res)} callback | Function accepting (err, Array[Transaction])
+ */
+function get_active_transactions(callback) {
+    Transaction.find({active: true})
+    .populate({
+        path: "instrument"
+    })
+    .exec((err, res) => {
+        callback(err, sort_by_date(res));
+    });
+}
+
+/**
+ * @name sort_by_date
+ * @description Sort an array of transactions by earliest interaction date
+ * @param {Array[Transaction]} transArray Array of transactions
+ * @returns {Array[Transaction]} Array of sorted transactions
+ */
+function sort_by_date(transArray) {
+    var copy = transArray;
+    copy.sort((a, b) => {
+        var aTime = (a.buying) ? a.buyTime : a.sellTime;
+        var bTime = (b.buying) ? b.buyTime : b.sellTime;
+        return aTime - bTime;
+    });
+    return copy;
 }
