@@ -7,7 +7,10 @@ const mongoose = require("mongoose");
  */
 module.exports = mongoose.model("Watchlist", mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId, // id for each watchlist
-    uid: String, // id of user who created watchlist
+    uid: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
     instruments: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Instrument',
@@ -17,7 +20,7 @@ module.exports = mongoose.model("Watchlist", mongoose.Schema({
     history: [{
         time: Number,
         price: Number
-    }] 
+    }]
 }));
 
 /**

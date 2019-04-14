@@ -20,7 +20,10 @@ module.exports = mongoose.model("Transaction", mongoose.Schema({
     active: Boolean,
     closePrice: Number,
     comments: [{
-        uid: String,
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        },
         remark: String
     }]
 }));

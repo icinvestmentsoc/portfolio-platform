@@ -60,6 +60,19 @@ app.get("/portfolio", (req, res) => {
     });
 });
 
+app.post("/newWatchlist", (req, res) => {
+    // POST w:
+    // userid
+    // instruments[]
+    res.end();
+});
+
+app.get("/latestPrices", (req, res) => {
+    instrumHandler.getLatestInstruments((err, data) => {
+        res.json(data);
+    });
+})
+
 schedule.scheduleJob("Price Tracking", "0 0 * * *", "Europe/London", () => {
     instrumHandler.ping();
 });

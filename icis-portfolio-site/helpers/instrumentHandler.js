@@ -1,9 +1,12 @@
 module.exports = {
-    ping: ping_api
+    ping: ping_api,
+    getLatestInstruments: get_latest_instruments
 }
 const Instrument = require("../models/instrument");
 const mongoose = require("mongoose");
 const request = require("request");
+
+const RANGE_OF_HISTORY_DAYS = 60;
 
 const apiInfo = "https://financialmodelingprep.com/developer/docs";
 const apiLink = "https://financialmodelingprep.com/api/stock/list/all?datatype=json";
@@ -41,6 +44,10 @@ function update_price(symbol, name, newPrice) {
         }
 
         instrumObj.currentPrice = newPrice;
+        if (instrumObj.history.length == RANGE_OF_HISTORY_DAYS) {
+            instrumObj = instrumObj.slice(1);
+        }
+
         instrumObj.history.push({
             time: round_date(Date.now()),
             price: newPrice
@@ -56,3 +63,8 @@ function round_date(timeStamp){
     return timeStamp;
 }
 
+function get_latest_instruments(callback) {
+    Instrument.find({}, (err, res) => {
+        callback(err, res);
+    });
+}
