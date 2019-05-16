@@ -1,6 +1,7 @@
 module.exports = {
     ping: ping_api,
-    getLatestInstruments: get_latest_instruments
+    getLatestInstruments: get_latest_instruments,
+    getLatestInstrument: get_latest_instrument
 }
 const Instrument = require("../models/instrument");
 const mongoose = require("mongoose");
@@ -65,6 +66,12 @@ function round_date(timeStamp){
 
 function get_latest_instruments(callback) {
     Instrument.find({}, (err, res) => {
+        callback(err, res);
+    });
+}
+
+function get_latest_instrument(symbol, callback) {
+    Instrument.find({"symbol": symbol}, (err, res) => {
         callback(err, res);
     });
 }
