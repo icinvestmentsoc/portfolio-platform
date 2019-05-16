@@ -68,8 +68,8 @@ app.post("/newWatchlist", (req, res) => {
 });
 
 app.get("/latestPrices", (req, res) => {
-    if (req.params.symbol) {
-        instrumHandler.getLatestInstrument(req.params.symbol, (err, data) => {
+    if (req.query.symbol) {
+        instrumHandler.getLatestInstrument(req.query.symbol, (err, data) => {
             res.json(data);
         });
     } else {
