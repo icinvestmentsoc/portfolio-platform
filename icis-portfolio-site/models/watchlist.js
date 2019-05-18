@@ -20,6 +20,10 @@ module.exports = mongoose.model("Watchlist", mongoose.Schema({
     history: [{
         time: Number,
         price: Number
+    }],
+    updateHistory: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Update'
     }]
 }));
 
