@@ -8,5 +8,9 @@ module.exports = mongoose.model("Instrument", mongoose.Schema({
     history: [{
         time: Number,
         price: Number
+    }],
+    watching: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Watchlist',
     }]
 }));

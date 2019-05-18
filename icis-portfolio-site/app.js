@@ -79,6 +79,12 @@ app.get("/latestPrices", (req, res) => {
     }
 });
 
+app.get("/priceSpread", (req, res) => {
+    instrumHandler.getLatestInstrumentSpread((err, data) => {
+        res.json(data);
+    }, 20);
+})
+
 schedule.scheduleJob("Price Tracking", "0 0 * * *", "Europe/London", () => {
     instrumHandler.ping();
 });

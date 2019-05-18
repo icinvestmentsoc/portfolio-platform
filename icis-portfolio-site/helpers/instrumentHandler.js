@@ -1,7 +1,8 @@
 module.exports = {
     ping: ping_api,
     getLatestInstruments: get_latest_instruments,
-    getLatestInstrument: get_latest_instrument
+    getLatestInstrument: get_latest_instrument,
+    getLatestInstrumentSpread: get_latest_instruments_spread
 }
 const Instrument = require("../models/instrument");
 const mongoose = require("mongoose");
@@ -74,4 +75,59 @@ function get_latest_instrument(symbol, callback) {
     Instrument.find({"symbol": symbol}, (err, res) => {
         callback(err, res);
     });
+}
+
+function get_latest_instrument_by_watching(callback) {
+    Instrument.find({})
+    .sort({"watching": "desc"})
+    .exec((err, res) => {
+        callback(err, res);
+    });
+}
+
+function get_latest_instruments_spread(callback, amount) {
+    Instrument.find({})
+    .sort({"watching": "desc"})
+    .limit(amount)
+    .lean()
+    .exec((err, res) => {
+        callback(err, res.map(instrum => get_daily_weekly_monthly_average(instrum)));
+    });
+}
+
+function get_daily_weekly_monthly_average(instrum) {
+    newInstrum = instrum;
+    history = instrum.history;
+
+    newInstrum.curr_price = get_current_price(history);
+    newInstrum.prev_price = get_previous_price(history);
+    newInstrum.week_avg = get_weekly_average(history);
+    newInstrum.month_avg = get_monthly_average(history);
+    console.log(newInstrum);
+
+    return newInstrum;
+}
+
+function get_current_price(history) {
+    console.log(history);
+    return history[history.length - 1].price;
+}
+
+function get_previous_price(history) {
+    if (history.length >= 2) {
+        return history[history.length - 2].price;
+    } else {
+        return get_current_price(history);
+    }
+}
+
+function get_weekly_average(history) {
+    weekSlice = history.slice(-7);
+    console.log(weekSlice);
+    return (weekSlice.reduce((x, y) => x.price + y.price) / weekSlice.length).toFixed(2);
+}
+
+function get_monthly_average(history) {
+    monthSlice = history.slice(-30);
+    return (monthSlice.reduce((x, y) => x.price + y.price) / monthSlice.length).toFixed(2);
 }
