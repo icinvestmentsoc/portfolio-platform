@@ -9,7 +9,7 @@ function createLineChart(jsonURL, chartID) {
     $.getJSON(jsonURL, function (data) {
         Highcharts.chart(chartID, {
             chart: {
-                height: 200
+                height: 150
             },
             credits: {
                 enabled: false
