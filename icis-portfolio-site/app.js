@@ -34,7 +34,9 @@ mongoose.connect("mongodb://admin:pass@cluster0-shard-00-00-jai9z.mongodb.net:27
  */
 
 app.get("/", (req, res) => {
-    res.render("index.hbs");
+    instrumHandler.getLatestInstrumentSpread((err, data) => {
+        res.render("index.hbs", {"spread": data});
+    }, 20);
 });
 
 app.get("/admin", (req, res) => {
@@ -83,7 +85,9 @@ app.get("/priceSpread", (req, res) => {
     instrumHandler.getLatestInstrumentSpread((err, data) => {
         res.json(data);
     }, 20);
-})
+});
+
+
 
 schedule.scheduleJob("Price Tracking", "0 0 * * *", "Europe/London", () => {
     instrumHandler.ping();

@@ -114,8 +114,6 @@
                     </div>
                 </div>
             </div>
-
-            
             
             <div class="dataBlock">
                 <span class="contentTitle" style="margin-left: 2%;"><strong>Spread</strong> / <span>Watchlists</span></span>
@@ -128,90 +126,17 @@
                         <th>Monthly Average</th>
                         <th>Users Watching</th>
                     </tr>
-                    <tr>
-                        <td>INSY | Inspector Y Ltd</td>
-                        <td>$5.09</td>
-                        <td>$6.06 (-17.00%)</td>
-                        <td>$5.07 (+0.39%)</td>
-                        <td>$5.00 (+1.80%)</td>
-                    </tr>
-                    <tr>
-                        <td>GSK | GlaxoSmithKine Limited</td>
-                        <td>$5.09</td>
-                        <td>$6.06 (-17.00%)</td>
-                        <td>$5.07 (+0.39%)</td>
-                        <td>$5.00 (+1.80%)</td>
-                    </tr>
-                    <tr>
-                        <td>INSY | Inspector Y Ltd</td>
-                        <td>$5.09</td>
-                        <td>$6.06 (-17.00%)</td>
-                        <td>$5.07 (+0.39%)</td>
-                        <td>$5.00 (+1.80%)</td>
-                    </tr>
-                    <tr>
-                        <td>GSK | GlaxoSmithKine Limited</td>
-                        <td>$5.09</td>
-                        <td>$6.06 (-17.00%)</td>
-                        <td>$5.07 (+0.39%)</td>
-                        <td>$5.00 (+1.80%)</td>
-                    </tr>
-                    <tr>
-                        <td>INSY | Inspector Y Ltd</td>
-                        <td>$5.09</td>
-                        <td>$6.06 (-17.00%)</td>
-                        <td>$5.07 (+0.39%)</td>
-                        <td>$5.00 (+1.80%)</td>
-                    </tr>
-                    <tr>
-                        <td>GSK | GlaxoSmithKine Limited</td>
-                        <td>$5.09</td>
-                        <td>$6.06 (-17.00%)</td>
-                        <td>$5.07 (+0.39%)</td>
-                        <td>$5.00 (+1.80%)</td>
-                    </tr>
-                    <tr>
-                        <td>INSY | Inspector Y Ltd</td>
-                        <td>$5.09</td>
-                        <td>$6.06 (-17.00%)</td>
-                        <td>$5.07 (+0.39%)</td>
-                        <td>$5.00 (+1.80%)</td>
-                    </tr>
-                    <tr>
-                        <td>GSK | GlaxoSmithKine Limited</td>
-                        <td>$5.09</td>
-                        <td>$6.06 (-17.00%)</td>
-                        <td>$5.07 (+0.39%)</td>
-                        <td>$5.00 (+1.80%)</td>
-                    </tr>
-                    <tr>
-                        <td>INSY | Inspector Y Ltd</td>
-                        <td>$5.09</td>
-                        <td>$6.06 (-17.00%)</td>
-                        <td>$5.07 (+0.39%)</td>
-                        <td>$5.00 (+1.80%)</td>
-                    </tr>
-                    <tr>
-                        <td>GSK | GlaxoSmithKine Limited</td>
-                        <td>$5.09</td>
-                        <td>$6.06 (-17.00%)</td>
-                        <td>$5.07 (+0.39%)</td>
-                        <td>$5.00 (+1.80%)</td>
-                    </tr>
-                    <tr>
-                        <td>INSY | Inspector Y Ltd</td>
-                        <td>$5.09</td>
-                        <td>$6.06 (-17.00%)</td>
-                        <td>$5.07 (+0.39%)</td>
-                        <td>$5.00 (+1.80%)</td>
-                    </tr>
-                    <tr>
-                        <td>GSK | GlaxoSmithKine Limited</td>
-                        <td>$5.09</td>
-                        <td>$6.06 (-17.00%)</td>
-                        <td>$5.07 (+0.39%)</td>
-                        <td>$5.00 (+1.80%)</td>
-                    </tr>
+
+                    {{#each spread}}
+                        <tr>
+                            <td>{{symbol}} | {{name}}</td>
+                            <td>{{{priceDisplay curr_price}}}</td>
+                            <td>{{priceDisplay prev_price}} {{{perDiff prev_price curr_price}}}</td>
+                            <td>{{priceDisplay week_avg}} {{{perDiff week_avg curr_price}}}</td>
+                            <td>{{priceDisplay month_avg}} {{{perDiff month_avg curr_price}}}</td>
+                            <td>{{watching}}</td>
+                        </tr>
+                    {{/each}}
                 </table>
             </div>
         </div>

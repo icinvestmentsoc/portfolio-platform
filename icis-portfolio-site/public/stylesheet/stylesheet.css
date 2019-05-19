@@ -152,6 +152,10 @@ tr:hover {
     color: #00FF00;
 }
 
+.negative {
+    color: red;
+}
+
 .contentTitle {
     padding: 3px;
     font-size: 18px;
