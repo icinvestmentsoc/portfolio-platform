@@ -7,6 +7,12 @@
         <input id="password" type="text" name="pass" placeholder="pass">
 
         <button id="login">Login</button>
+        <button id="logout">Logout</button>
+
+        <br>
+        {{user.uid}}
+        {{user.activity}}
+        {{user.admin}}
 
         <script>
             $("#login").click((err, el) => {
@@ -19,6 +25,10 @@
                 $.post("../userLogin", {"user": user, "pass": pass}, (data) => {
                     console.log(data);
                 })
+            });
+
+            $("#logout").click((err, el) => {
+                $.post("../userLogout");
             });
         </script>
     </body>

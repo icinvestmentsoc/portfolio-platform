@@ -45,17 +45,28 @@ app.get("/admin", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-    res.render("login.hbs");
+    userHandler.getSessionUser(req, (user) => {
+        res.render("login.hbs", {"user": user});
+    }, () => {
+        res.render("login.hbs");
+    });
 });
 
 app.post("/userLogin", (req, res) => {
     // POST w:
     // user, pass
 
-    userHandler.login(req.body.user, req.body.pass, (err, loginRes) => {
-        // return appropriate token to be used by the user
+    userHandler.login(req, (err, verified, user) => {
+        if (verified) {
+            res.end("Successful");
+        }
         res.end();
     });
+});
+
+app.post("/userLogout", (req, res) => {
+    userHandler.logout(req);
+    res.end();
 });
 
 app.post("/excelInput", (req, res) => {
@@ -101,8 +112,6 @@ app.get("/priceSpread", (req, res) => {
         res.json(data);
     }, 20);
 });
-
-
 
 schedule.scheduleJob("Price Tracking", "0 0 * * *", "Europe/London", () => {
     instrumHandler.ping();

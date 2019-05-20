@@ -31,7 +31,8 @@ function create_instrument(symbol, name, price) {
         symbol: symbol,
         name: name,
         currentPrice: price,
-        history: []
+        history: [],
+        watching: []
     });
 
     return instrumObj;

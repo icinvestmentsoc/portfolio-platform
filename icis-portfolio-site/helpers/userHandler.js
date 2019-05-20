@@ -1,28 +1,46 @@
 module.exports = {
-    login: login
+    login: login,
+    logout: logout,
+    getSessionUser: get_session_user
 }
 const User = require("../models/user");
 const mongoose = require("mongoose");
 
-function login(name, attempt, callback) {
-    create_new_user(name, attempt, (err, obj) => {
+function login(req, callback) {
+    check_session_user_exists(req, (err, exists, user) => {
+        console.log(exists);
+        if (!exists) {
+            verify(req, (err, verified, user) => {
+                callback(err, verified, user);
+            });
+        } else {
+            callback(err, true, user);
+        }
+    })
+}
+
+function verify(req, callback) {
+    create_new_user(req.body.user, req.body.pass, (err, obj) => {
         user = obj.user;
         created = obj.created;
+        attempt = req.body.pass;
 
         console.log(created);
 
         if (created) {
             console.log("Created new account");
-            // create a login token for them
+            set_session_user(req, user);
+            callback(err, true, user);
         } else {
             check_hash(user, attempt, (verified) => {
                 if (verified) {
                     console.log("Password is right");
-                    // update the login token for them
+                    set_session_user(req, user);
                 } else {
                     console.log("Password is wrong");
-                    // say that the password is wrong
                 }
+
+                callback(err, verified, user);
             });
         }
     });
@@ -46,6 +64,42 @@ function create_new_user(name, pass, callback) {
             });
         }
     })
+}
+
+function check_session_user_exists(req, callback) {
+    if (req.session && req.session.user) {
+        check_user_exists(req.session.user.uid, (err, exists) => {
+            if (exists) {
+                get_user_by_name(req.session.user.uid, (err, user) => {
+                    set_session_user(req, user);
+                    callback(err, exists, user);
+                });
+            } else {
+                logout(req);
+                callback(err, false, null);
+            }
+        });
+    } else {
+        callback(null, false, null);
+    }
+}
+
+function set_session_user(req, user) {
+    req.session.user = user;
+}
+
+function get_session_user(req, successCallback, failCallback) {
+    if (req.session && req.session.user) {
+        successCallback(req.session.user);
+    } else {
+        failCallback();
+    }
+}
+
+function logout(req) {
+    if (req.session) {
+        req.session.destroy();
+    }
 }
 
 function check_user_exists(name, callback) {
