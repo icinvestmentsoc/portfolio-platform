@@ -10,6 +10,7 @@ const schedule = require("node-schedule-tz");
 
 const transHandler = require("./helpers/transactionHandler");
 const instrumHandler = require("./helpers/instrumentHandler");
+const userHandler = require("./helpers/userHandler");
 
 var app = express();
 var server = http.Server(app);
@@ -41,7 +42,21 @@ app.get("/", (req, res) => {
 
 app.get("/admin", (req, res) => {
     res.render("admin.hbs");
-})
+});
+
+app.get("/login", (req, res) => {
+    res.render("login.hbs");
+});
+
+app.post("/userLogin", (req, res) => {
+    // POST w:
+    // user, pass
+
+    userHandler.login(req.body.user, req.body.pass, (err, loginRes) => {
+        // return appropriate token to be used by the user
+        res.end();
+    });
+});
 
 app.post("/excelInput", (req, res) => {
     var transactions = JSON.parse(req.body.data);

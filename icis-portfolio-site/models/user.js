@@ -7,8 +7,13 @@ module.exports = mongoose.model("User", mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Watchlist',
     }],
+    activity: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Update'
+    }],
     admin: {
         type: Boolean,
         default: false
-    }
+    },
+    hash: String
 }));
