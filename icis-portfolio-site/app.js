@@ -36,7 +36,7 @@ mongoose.connect("mongodb://admin:pass@cluster0-shard-00-00-jai9z.mongodb.net:27
 
 app.get("/", (req, res) => {
     instrumHandler.getLatestInstrumentSpread((err, data) => {
-        res.render("index.hbs", {"spread": data});
+        userHandler.renderWSessionUser(res, req, "index.hbs", {"spread": data});
     }, 20);
 });
 
@@ -45,10 +45,20 @@ app.get("/admin", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-    userHandler.getSessionUser(req, (user) => {
-        res.render("login.hbs", {"user": user});
-    }, () => {
-        res.render("login.hbs");
+    userHandler.renderWSessionUser(res, req, "login.hbs");
+});
+
+app.get("/stock", (req, res) => {
+    var symbol = req.params.symbol;
+    instrumHandler.getLatestInstrument(symbol, (err, instrum) => {
+        userHandler.renderWSessionUser(res, req, "stock.hbs", {"instrument": instrum});
+    });
+});
+
+app.get("/user", (req, res) => {
+    var username = req.params.username;
+    userHandler.getUser(username, (req, user) => {
+        userHandler.renderWSessionUser(res, req, "user.hbs", {"profile": user});
     });
 });
 

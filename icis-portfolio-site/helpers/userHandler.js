@@ -1,7 +1,8 @@
 module.exports = {
     login: login,
     logout: logout,
-    getSessionUser: get_session_user
+    renderWSessionUser: render_with_session_user,
+    getUser: get_user_by_name
 }
 const User = require("../models/user");
 const mongoose = require("mongoose");
@@ -17,6 +18,16 @@ function login(req, callback) {
             callback(err, true, user);
         }
     })
+}
+
+function render_with_session_user(res, req, file, data = {}) {
+    get_session_user(req, (user) => {
+        newData = data;
+        newData["user"] = user;
+        res.render(file, newData);
+    }, () => {
+        res.render(file, data);
+    });
 }
 
 function verify(req, callback) {
