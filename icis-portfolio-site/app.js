@@ -49,15 +49,17 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/stock", (req, res) => {
-    var symbol = req.params.symbol;
+    var symbol = req.query.symbol;
+    console.log(symbol);
     instrumHandler.getLatestInstrument(symbol, (err, instrum) => {
+        console.log(instrum);
         userHandler.renderWSessionUser(res, req, "stock.hbs", {"instrument": instrum});
     });
 });
 
 app.get("/user", (req, res) => {
-    var username = req.params.username;
-    userHandler.getUser(username, (req, user) => {
+    var username = req.query.username;
+    userHandler.getUser(username, (err, user) => {
         userHandler.renderWSessionUser(res, req, "user.hbs", {"profile": user});
     });
 });

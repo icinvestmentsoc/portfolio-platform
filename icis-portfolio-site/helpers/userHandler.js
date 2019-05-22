@@ -21,6 +21,7 @@ function login(req, callback) {
 }
 
 function render_with_session_user(res, req, file, data = {}) {
+    console.log(data);
     get_session_user(req, (user) => {
         newData = data;
         newData["user"] = user;
