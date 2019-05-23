@@ -12,6 +12,7 @@ module.exports = mongoose.model("Watchlist", mongoose.Schema({
         ref: "User"
     },
     name: String,
+    timeStarted: Number,
     instruments: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Instrument',

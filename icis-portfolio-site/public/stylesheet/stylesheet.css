@@ -226,3 +226,19 @@ tr:hover {
 #updateList > div > span {
     color: grey;
 }
+
+.update-snapshot {
+    text-decoration: none;
+    color: black;
+}
+
+.update-snapshot > .time {
+    margin-left: 5px;
+    color: grey;
+    font-size: 10px;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}

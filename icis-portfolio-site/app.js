@@ -11,6 +11,7 @@ const schedule = require("node-schedule-tz");
 const transHandler = require("./helpers/transactionHandler");
 const instrumHandler = require("./helpers/instrumentHandler");
 const userHandler = require("./helpers/userHandler");
+const updateHandler = require("./helpers/updateHandler");
 
 var app = express();
 var server = http.Server(app);
@@ -36,7 +37,12 @@ mongoose.connect("mongodb://admin:pass@cluster0-shard-00-00-jai9z.mongodb.net:27
 
 app.get("/", (req, res) => {
     instrumHandler.getLatestInstrumentSpread((err, data) => {
-        userHandler.renderWSessionUser(res, req, "index.hbs", {"spread": data});
+        updateHandler.getLatestSnapshots(5, (err, updates) => {
+            userHandler.renderWSessionUser(res, req, "index.hbs", {
+                "spread": data,
+                "updates": updates
+            });
+        });
     }, 20);
 });
 
@@ -48,8 +54,14 @@ app.get("/login", (req, res) => {
     userHandler.renderWSessionUser(res, req, "login.hbs");
 });
 
-app.get("/stock", (req, res) => {
-    var symbol = req.query.symbol;
+app.get("/latestUpdateSnapshot", (req, res) => {
+    updateHandler.getLatestSnapshots(5, (err, json) => {
+        res.json(json);
+    })
+});
+
+app.get("/stock/:symbol", (req, res) => {
+    var symbol = req.params.symbol;
     console.log(symbol);
     instrumHandler.getLatestInstrument(symbol, (err, instrum) => {
         console.log(instrum);
@@ -57,8 +69,8 @@ app.get("/stock", (req, res) => {
     });
 });
 
-app.get("/user", (req, res) => {
-    var username = req.query.username;
+app.get("/user/:username", (req, res) => {
+    var username = req.params.username;
     userHandler.getUser(username, (err, user) => {
         userHandler.renderWSessionUser(res, req, "user.hbs", {"profile": user});
     });
@@ -125,6 +137,13 @@ app.get("/priceSpread", (req, res) => {
     }, 20);
 });
 
+app.post("/newAdmin", (req, res) => {
+    var pass = req.body.pass;
+    userHandler.createAdmin(pass, (err, obj) => {
+        res.end("Successful");
+    });
+});
+
 schedule.scheduleJob("Price Tracking", "0 0 * * *", "Europe/London", () => {
     instrumHandler.ping();
 });
@@ -132,6 +151,3 @@ schedule.scheduleJob("Price Tracking", "0 0 * * *", "Europe/London", () => {
 server.listen(3000, function() {
     console.log('listening on localhost:' + 3000);
 });
-
-
-

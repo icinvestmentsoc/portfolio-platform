@@ -106,11 +106,9 @@
                 <strong style="margin-left: 4%;">Updates</strong><br>
                 <div id="updates">
                     <div id="updateList">
-                        <div>This is a new update. <span>18/05/19</span></div>
-                        <div>This is another new update. <span>18/05/19</span></div>
-                        <div>This is another new update. <span>18/05/19</span></div>
-                        <div>This is another new update. <span>18/05/19</span></div>
-                        <div>This is another new update. <span>18/05/19</span></div>
+                        {{#each updates}}
+                            <div>{{{this}}}</div>
+                        {{/each}}
                     </div>
                 </div>
             </div>
@@ -151,16 +149,16 @@
                 <a href="#">Portfolio</a>
                 <a href="#">Watchlist</a>
                 <a href="#">Leaderboard</a>
-                <a href="#">Society</a>
+                <a href="https://www.investmentsoc.com">Society</a>
                 <a href="#">Feedback</a>
 
                 <!-- Play about with design -->
                 <div style="bottom: 10px; right: 10px; position: absolute; z-index: 15; color: #c4c4c4; font-weight: bold;">
                     <span style="color: white">
                         {{#if user.uid}}
-                            {{user.uid}}
+                            <a href="/user/{{user.uid}}">{{user.uid}}</a>
                         {{else}}
-                            Not logged in
+                            <a href="/login">Not logged in</a>
                         {{/if}}
                     </span>
                 </div>

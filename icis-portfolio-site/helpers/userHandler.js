@@ -2,10 +2,13 @@ module.exports = {
     login: login,
     logout: logout,
     renderWSessionUser: render_with_session_user,
-    getUser: get_user_by_name
+    getUser: get_user_by_name,
+    createAdmin: create_admin
 }
-const User = require("../models/user");
+
 const mongoose = require("mongoose");
+const User = require("../models/user");
+const updateHandler = require("../helpers/updateHandler");
 
 function login(req, callback) {
     check_session_user_exists(req, (err, exists, user) => {
@@ -65,14 +68,39 @@ function create_new_user(name, pass, callback) {
                 _id: new mongoose.Types.ObjectId(),
                 uid: name,
                 watchlists: [],
+                activity: [],
                 hash: hash(pass)
             });
-        
-            userObj.save();
-            callback(err, {"user": userObj, "created": true});
+
+            updateHandler.createNewUpdate("/user/" + name, userObj._id, name + " just joined", (err, update) => {
+                userObj.activity = [update._id];
+                userObj.save((err, obj) => {
+                    callback(err, {"user": obj, "created": true});
+                });
+            });
+            
         } else {
             get_user_by_name(name, (err, user) => {
                 callback(err, {"user": user, "created": false});
+            });
+        }
+    })
+}
+
+function create_admin(pass, callback) {
+    check_user_exists("admin", (err, exists) => {
+        if (!exists) {
+            const adminObj = new User({
+                _id: new mongoose.Types.ObjectId(),
+                uid: "admin",
+                watchlists: [],
+                activity: [],
+                hash: hash(pass),
+                admin: true
+            });
+
+            adminObj.save((err, obj) => {
+                callback(err, obj);
             });
         }
     })
@@ -164,4 +192,3 @@ function get_last_activity(uid, callback) {
         callback(err, activity[activity.length - 1]);
     })
 }
-
